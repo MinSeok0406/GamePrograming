@@ -1,0 +1,22 @@
+void SelectionSort(vector<int>& v)
+{
+	const int n = (int)v.size();
+
+	for (int i = 0; i < n - 1; i++)
+	{
+		int bestIdx = i;
+
+		for (int j = i + 1; j < n; j++)
+		{
+			if (v[j] < v[bestIdx])
+			{
+				bestIdx = j;
+			}
+		}
+
+		// 교환
+		int temp = v[i];
+		v[i] = v[bestIdx];
+		v[bestIdx] = temp;
+	}
+}
