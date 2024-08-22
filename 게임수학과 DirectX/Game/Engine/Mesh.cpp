@@ -17,6 +17,7 @@ void Mesh::Render()
 
 	GEngine->GetTableDescHeap()->CommitTable();
 
+	// °⁄°⁄
 	CMD_LIST->DrawIndexedInstanced(_indexCount, 1, 0, 0, 0);
 }
 
@@ -72,6 +73,6 @@ void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 	_indexBuffer->Unmap(0, nullptr);
 
 	_indexBufferView.BufferLocation = _indexBuffer->GetGPUVirtualAddress();
-	_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	_indexBufferView.Format = DXGI_FORMAT_R32_UINT;	// 32∫Ò∆Æ
 	_indexBufferView.SizeInBytes = bufferSize;
 }
