@@ -20,7 +20,7 @@ class IocpEvent : public OVERLAPPED
 public:
 	IocpEvent(EventType type);
 
-	void Init();
+	void			Init();
 
 public:
 	EventType		eventType;
@@ -80,6 +80,5 @@ class SendEvent : public IocpEvent
 public:
 	SendEvent() : IocpEvent(EventType::Send) { }
 
-	// TEMP
-	Vector<BYTE> buffer;
+	Vector<SendBufferRef> sendBuffers;
 };

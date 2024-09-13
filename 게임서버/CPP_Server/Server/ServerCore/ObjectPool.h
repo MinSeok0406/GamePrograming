@@ -27,7 +27,6 @@ public:
 #else
 		s_pool.Push(MemoryHeader::DetachHeader(obj));
 #endif
-		
 	}
 
 	template<typename... Args>
@@ -36,7 +35,6 @@ public:
 		shared_ptr<Type> ptr = { Pop(forward<Args>(args)...), Push };
 		return ptr;
 	}
-
 
 private:
 	static int32		s_allocSize;
