@@ -9,6 +9,16 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+// Dependency Injection
+builder.Services.AddSingleton<IFoodService, FoodService>();
+// 생성자에서 알아서 연결해준다
+builder.Services.AddSingleton<PaymentService>();
+
+// 3가지 모드
+builder.Services.AddSingleton<SingletonService>();
+builder.Services.AddTransient<TransientService>();
+builder.Services.AddScoped<ScopedService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
