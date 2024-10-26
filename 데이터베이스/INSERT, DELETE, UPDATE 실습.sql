@@ -21,6 +21,6 @@ WHERE yearID >= 2024
 -- UPDATE [테이블명] SET [열 = 값, ...] WHERE [조건]
 UPDATE salaries
 SET salary *= 0.5
-WHERE yearID = 2024
+WHERE yearID = 2020
 
 

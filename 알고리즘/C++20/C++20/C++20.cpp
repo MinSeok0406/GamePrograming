@@ -4,114 +4,101 @@
 #include <map>
 #include <algorithm>
 #include <ranges>
+#include <coroutine>
+#include "MyCoroutine.h"
+#include <random>
+#include <time.h>
+#include <cstdlib>
+#include <string>
 using namespace std;
 
-// 오늘의 주제 : Range
+// 오늘의 주제 : Coroutine
 
-template<std::ranges::input_range Range>
-requires std::ranges::view<Range>
-class ContainerView : public std::ranges::view_interface<ContainerView<Range>>
+struct CoroutineObject
 {
-public:
-    ContainerView() = default;
-
-    constexpr ContainerView(Range r) : _range(std::move(r)), _begin(std::begin(r)), _end(std::end(r))
+    struct promise_type
     {
-
-    }
-
-    constexpr auto begin() const { return _begin; }
-    constexpr auto end() const { return _end; }
-
-private:
-    Range _range;
-    std::ranges::iterator_t<Range> _begin;
-    std::ranges::iterator_t<Range> _end;
+        CoroutineObject get_return_object() { return {}; }
+        std::suspend_never initial_suspend() const noexcept { return {}; }
+        std::suspend_never final_suspend() const noexcept { return {}; }
+        void return_void() { }
+        void unhandled_exception() { }
+    };
 };
 
-template<typename Range>
-ContainerView(Range&& range) -> ContainerView < std::ranges::views::all_t<Range>>;
+CoroutineObject HelloCoroutine()
+{
+    co_return;
+}
+
+Future<int> CreateFuture()
+{
+    co_return 2024;
+}
+
+Generator<int> GenNumbers(int start = 0, int delta = 1)
+{
+    int now = start;
+
+    while (true)
+    {
+        co_yield now;   // yield return
+        now += delta;
+    }
+}
+
+Job PrepareJob()
+{
+    // co_await [Awaitable]
+    co_await std::suspend_never();
+}
 
 int main()
 {
-    // C# LINQ 문법이랑 비슷
+    // 함수가 코루틴이 되려면...
+    // - co_return
+    // - co_yield
+    // - co_await
 
-    vector<int> v1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    // 코루틴을 사용할 수 있는 Framework를 제공
+    // 3가지 요소로 구성
+    // - promise 객체
+    // - 코루틴 핸들 (밖에서 코루틴을 resume / destroy 할 때 사용. 일종의 리모컨)
+    // - 코루틴 프레임 (promise 객체, 코루틴이 인자 등을 포함하는 heap 할당 객체)
 
-    auto results = v1 | std::views::filter([](int n) { return n % 2 == 0; })
-                      | std::views::transform([](int n) { return n * 2; });
+    auto future = CreateFuture();
+    // TODO : 다른걸 하다
+    cout << future.get() << endl;
 
-    for (auto n : results)
-        cout << n << " ";
-
-    // Range : 순회할 수 있는 아이템 그룹 (ex. STL Container)
-    // View : Range에 대해서 적용할 수 있는 연산
-
-    auto results2 = v1 | std::views::filter([](int n) { return n % 2 == 0; })
-                        | std::views::transform([](int n) { return n * 2; })
-                        | std::views::take(3);
-
-    //std::sort(v1.begin(), v1.end());
-    std::ranges::sort(v1);
-
-    struct Knight
+    auto numbers = GenNumbers(0, 1);
+    for (int i = 0; i < 20; i++)
     {
-        std::string     name;
-        int             id;
-    };
+        numbers.next();
 
-    vector<Knight> knights =
-    {
-        {"Minseok", 1},
-        {"Ari", 2},
-        {"Zac", 3},
-        {"Rulu", 4},
-    };
-
-    std::ranges::sort(knights, {}, & Knight::name); // ascending by name
-    std::ranges::sort(knights, std::ranges::greater(), &Knight::name); // descending by name
-    std::ranges::sort(knights, {}, & Knight::id); // ascending by id
-    std::ranges::sort(knights, std::ranges::greater(), & Knight::id); // descending by id
-
-    map<string, int> m =
-    {
-        {"Minseok", 1},
-        {"Ari", 2},
-        {"Zac", 3},
-        {"Rulu", 4},
-    };
-
-    for (const auto& name : std::views::keys(m) | std::views::reverse)
-        cout << name << endl;
-
-    // 0~100 사이의 숫자중 소수인 5개의 숫자를 추출
-
-    auto isPrime = [](int num)
-    {
-        if (num <= 1)
-            return false;
-
-        for (int n = 2; n * n <= num; n++)
-            if (num % n == 0)
-                return false;
-
-        return true;
-    };
-
-    std::vector<int> v3;
-
-    // std::views::iota(a, b) : a부터 시작해서 1씩 증가 b개를 만들어줌
-    for (int n : std::views::iota(0, 100) | std::views::filter(isPrime) | std::views::take(5))
-    {
-        v3.push_back(n);
+        cout << " " << numbers.get();
     }
 
-    // 커스텀 뷰 (std::ranges::view_interface)
-    std::vector<int> myVec{ 1, 2, 3, 4, 5 };
-    auto myView = ContainerView(myVec);
+    auto job = PrepareJob();
 
-    for (auto n : myView)
+    job.start();
+
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> dist(0, 99);
+    vector<int> v;
+
+    for (int i = 0; i < 100; i++)
     {
-        cout << n << endl;
+        v.push_back(dist(mt));
     }
+
+    srand(time(NULL));
+    
+    vector<int> v2;
+
+    for (int i = 0; i < 50; i++)
+    {
+        v2.push_back(rand() % 50 + 1);
+    }
+
 }
