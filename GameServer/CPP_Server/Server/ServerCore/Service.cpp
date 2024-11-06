@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "Service.h"
-#include "Session.h"
-#include "Listener.h"
 
 /*----------------
 	Service
@@ -20,6 +18,15 @@ Service::~Service()
 void Service::CloseService()
 {
 	// TODO
+}
+
+void Service::Broadcast(SendBufferRef sendBuffer)
+{
+	WRITE_LOCK;
+	for (const auto& session : _sessions)
+	{
+		session->Send(sendBuffer);
+	}
 }
 
 SessionRef Service::CreateSession()
