@@ -1,9 +1,9 @@
 #pragma once
 #include "NetAddress.h"
 
-/*------------------
-*	SocketUtils
--------------------*/
+/*----------------
+	SocketUtils
+-----------------*/
 
 class SocketUtils
 {

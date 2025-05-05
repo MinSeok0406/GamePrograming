@@ -22,10 +22,9 @@ struct TimerItem
 	JobData* jobData = nullptr;
 };
 
-
-/*-----------------
-*	JobTimer
-------------------*/
+/*--------------
+	JobTimer
+---------------*/
 
 class JobTimer
 {
@@ -34,10 +33,9 @@ public:
 	void			Distribute(uint64 now);
 	void			Clear();
 
-
 private:
 	USE_LOCK;
-	PriorityQueue<TimerItem>	_items;
-	Atomic<bool>				_distributing = false;
+	priority_queue<TimerItem>	_items;
+	atomic<bool>				_distributing = false;
 };
 

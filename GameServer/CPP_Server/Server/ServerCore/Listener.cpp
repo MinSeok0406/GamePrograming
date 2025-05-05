@@ -5,9 +5,9 @@
 #include "Session.h"
 #include "Service.h"
 
-//--------------
-//	 Listener
-//--------------
+/*--------------
+	Listener
+---------------*/
 
 Listener::~Listener()
 {
@@ -17,7 +17,7 @@ Listener::~Listener()
 	{
 		// TODO
 
-		xdelete(acceptEvent);
+		delete(acceptEvent);
 	}
 }
 
@@ -49,7 +49,7 @@ bool Listener::StartAccept(ServerServiceRef service)
 	const int32 acceptCount = _service->GetMaxSessionCount();
 	for (int32 i = 0; i < acceptCount; i++)
 	{
-		AcceptEvent* acceptEvent = xnew<AcceptEvent>();
+		AcceptEvent* acceptEvent = new AcceptEvent();
 		acceptEvent->owner = shared_from_this();
 		_acceptEvents.push_back(acceptEvent);
 		RegisterAccept(acceptEvent);
@@ -77,7 +77,7 @@ void Listener::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 
 void Listener::RegisterAccept(AcceptEvent* acceptEvent)
 {
-	SessionRef session = _service->CreateSession();
+	SessionRef session = _service->CreateSession(); // Register IOCP
 
 	acceptEvent->Init();
 	acceptEvent->session = session;
@@ -111,7 +111,7 @@ void Listener::ProcessAccept(AcceptEvent* acceptEvent)
 		RegisterAccept(acceptEvent);
 		return;
 	}
-	
+
 	session->SetNetAddress(NetAddress(sockAddress));
 	session->ProcessConnect();
 	RegisterAccept(acceptEvent);

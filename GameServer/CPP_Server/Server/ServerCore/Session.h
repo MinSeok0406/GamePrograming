@@ -6,9 +6,9 @@
 
 class Service;
 
-//--------------
-//	 Session
-//--------------
+/*--------------
+	Session
+---------------*/
 
 class Session : public IocpObject
 {
@@ -16,9 +16,9 @@ class Session : public IocpObject
 	friend class IocpCore;
 	friend class Service;
 
-	enum 
+	enum
 	{
-		BUFFER_SIZE = 0x10000,	// 64KB
+		BUFFER_SIZE = 0x10000, // 64KB
 	};
 
 public:
@@ -27,11 +27,11 @@ public:
 
 public:
 						/* 외부에서 사용 */
-	void				Send(SendBufferRef sendBuffer);		// 데이터 송신 요청을 처리하는 메소드
+	void				Send(SendBufferRef sendBuffer);
 	bool				Connect();
-	void				Disconnect(const WCHAR* cause);		// 소켓 연결을 해제하는 메소드
+	void				Disconnect(const WCHAR* cause);
 
-	shared_ptr<Service> GetService() { return _service.lock(); }
+	shared_ptr<Service>	GetService() { return _service.lock(); }
 	void				SetService(shared_ptr<Service> service) { _service = service; }
 
 public:
@@ -51,8 +51,8 @@ private:
 						/* 전송 관련 */
 	bool				RegisterConnect();
 	bool				RegisterDisconnect();
-	void				RegisterRecv();			// 수신 대기를 등록하는 메소드
-	void				RegisterSend();			// 송신 데이터가 있을 경우 소켓에 비동기로 송신을 등록하는 메소드
+	void				RegisterRecv();
+	void				RegisterSend();
 
 	void				ProcessConnect();
 	void				ProcessDisconnect();
@@ -63,26 +63,25 @@ private:
 
 protected:
 						/* 컨텐츠 코드에서 재정의 */
-	virtual void		OnConnected() { }									// 연결되었을 때 호출되는 메소드
-	virtual int32		OnRecv(BYTE* buffer, int32 len) { return len; }		// 데이터 수신 시 호출되는 메소드
-	virtual void		OnSend(int32 len) { }								// 데이터 송신 완료 시 호출되는 메소드
-	virtual void		OnDisconnected() { }								// 연결 해제 시 호출되는 메소드
+	virtual void		OnConnected() { }
+	virtual int32		OnRecv(BYTE* buffer, int32 len) { return len; }
+	virtual void		OnSend(int32 len) { }
+	virtual void		OnDisconnected() { }
 
 private:
 	weak_ptr<Service>	_service;
-	SOCKET				_socket = INVALID_SOCKET;	// 네트워크 통신에 사용되는 소켓
+	SOCKET				_socket = INVALID_SOCKET;
 	NetAddress			_netAddress = {};
-	Atomic<bool>		_connected = false;
+	atomic<bool>		_connected = false;
 
 private:
 	USE_LOCK;
-
 							/* 수신 관련 */
 	RecvBuffer				_recvBuffer;
 
 							/* 송신 관련 */
-	Queue<SendBufferRef>	_sendQueue;
-	Atomic<bool>			_sendRegistered = false;
+	queue<SendBufferRef>	_sendQueue;
+	atomic<bool>			_sendRegistered = false;
 
 private:
 						/* IocpEvent 재사용 */
@@ -92,15 +91,14 @@ private:
 	SendEvent			_sendEvent;
 };
 
-
-//-----------------
-//	 PacketSession
-//-----------------
+/*-----------------
+	PacketSession
+------------------*/
 
 struct PacketHeader
 {
 	uint16 size;
-	uint16 id;	// 프로토콜ID
+	uint16 id; // 프로토콜ID (ex. 1=로그인, 2=이동요청)
 };
 
 class PacketSession : public Session

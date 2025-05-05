@@ -1,8 +1,8 @@
 #pragma once
 
-//-------------------
-//	  NetAddress
-//-------------------
+/*--------------
+	NetAddress
+---------------*/
 
 class NetAddress
 {

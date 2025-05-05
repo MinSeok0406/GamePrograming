@@ -1,12 +1,14 @@
 #pragma once
+#include "Creature.h"
+class GameSession;
+class Room;
 
-class Player
+class Player : public Creature
 {
 public:
+	Player();
+	virtual ~Player();
 
-	uint64					playerId = 0;
-	string					name;
-	Protocol::PlayerType	type = Protocol::PLAYER_TYPE_NONE;
-	GameSessionRef			ownerSession;	// Cycle
+	weak_ptr<GameSession> session;
 };
 

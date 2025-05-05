@@ -1,9 +1,9 @@
 #pragma once
 #include <functional>
 
-/*--------------
-*	Job
---------------*/
+/*---------
+	Job
+----------*/
 
 using CallbackType = std::function<void()>;
 
@@ -12,7 +12,6 @@ class Job
 public:
 	Job(CallbackType&& callback) : _callback(std::move(callback))
 	{
-
 	}
 
 	template<typename T, typename Ret, typename... Args>

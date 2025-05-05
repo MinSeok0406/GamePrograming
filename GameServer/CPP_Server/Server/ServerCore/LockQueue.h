@@ -13,6 +13,11 @@ public:
 	T Pop()
 	{
 		WRITE_LOCK;
+		return PopNoLock();
+	}
+
+	T PopNoLock()
+	{
 		if (_items.empty())
 			return T();
 
@@ -21,21 +26,20 @@ public:
 		return ret;
 	}
 
-	void PopAll(OUT Vector<T>& items)
+	void PopAll(OUT vector<T>& items)
 	{
 		WRITE_LOCK;
-		while (T item = Pop())
+		while (T item = PopNoLock())
 			items.push_back(item);
 	}
 
 	void Clear()
 	{
 		WRITE_LOCK;
-		_items = Queue<T>();
+		_items = queue<T>();
 	}
-
 
 private:
 	USE_LOCK;
-	Queue<T> _items;
+	queue<T> _items;
 };

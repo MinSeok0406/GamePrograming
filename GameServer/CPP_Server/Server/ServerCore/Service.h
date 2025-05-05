@@ -8,11 +8,11 @@ enum class ServiceType : uint8
 {
 	Server,
 	Client
-};	
+};
 
-/*----------------
+/*-------------
 	Service
-----------------*/
+--------------*/
 
 using SessionFactory = function<SessionRef(void)>;
 
@@ -42,19 +42,19 @@ public:
 
 protected:
 	USE_LOCK;
-	ServiceType			_type; // 서버 서비스인지 클라이언트 서비스인지
+	ServiceType			_type;
 	NetAddress			_netAddress = {};
 	IocpCoreRef			_iocpCore;
 
-	Set<SessionRef>		_sessions; // 해당 서비스를 지원할 세션들을 관리
+	set<SessionRef>		_sessions;
 	int32				_sessionCount = 0;
 	int32				_maxSessionCount = 0;
 	SessionFactory		_sessionFactory;
 };
 
-/*----------------
+/*-----------------
 	ClientService
-----------------*/
+------------------*/
 
 class ClientService : public Service
 {
@@ -66,10 +66,10 @@ public:
 };
 
 
-
-/*----------------
+/*-----------------
 	ServerService
-----------------*/
+------------------*/
+
 class ServerService : public Service
 {
 public:

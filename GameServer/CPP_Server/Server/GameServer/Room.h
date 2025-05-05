@@ -4,13 +4,34 @@
 class Room : public JobQueue
 {
 public:
-	// 싱글쓰레드 환경인마냥 코딩
-	void Enter(PlayerRef player);
-	void Leave(PlayerRef player);
-	void Broadcast(SendBufferRef sendBuffer);
+	Room();
+	virtual ~Room();
+
+public:
+	bool EnterRoom(ObjectRef object, bool randPos = true);
+	bool LeaveRoom(ObjectRef object);
+
+	bool HandleEnterPlayer(PlayerRef player);
+	bool HandleLeavePlayer(PlayerRef player);
+
+	// 참조 방식으로 받다가 Job에서 처리돼서 소멸되면 메모리 누수가
+	// 일어나기 때문에 복사 방식으로 바꿈
+	void HandleMove(Protocol::C_MOVE pkt);
+
+public:
+	void UpdateTick();
+
+	RoomRef GetRoomRef();
 
 private:
-	map<uint64, PlayerRef> _players;
+	bool AddObject(ObjectRef object);
+	bool RemoveObject(uint64 objectId);
+
+private:
+	void Broadcast(SendBufferRef sendBuffer, uint64 exceptId = 0);
+
+private:
+	unordered_map<uint64, ObjectRef> _objects;
 };
 
-extern shared_ptr<Room> GRoom;
+extern RoomRef GRoom;
