@@ -131,7 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="그래프.cpp" />
     <ClCompile Include="동적배열.cpp" />
+    <ClCompile Include="스택.cpp" />
+    <ClCompile Include="연결리스트.cpp" />
+    <ClCompile Include="큐.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -35,9 +35,10 @@ int main()
 {
 	vector<int> v1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 	vector<int> v2;
+	list<int> li = {1, 2, 3, 4, 5};
 
 	// v1 벡터의 요소에서 짝수를 찾고, 그 값들에 2을 곱해서 저장한다.
-	auto results = v1 | std::views::filter([](int n) {return n % 2 == 0; })
+	auto results = v1 | std::views::filter([](int n) { return n % 2 == 0; })
 		| std::views::transform([](int n) { return n * 2; });
 
 	// Range : Range란 순회할 수 있는 아이템 그룹 (ex. STL Container)
@@ -57,11 +58,14 @@ int main()
 
 	vector<Knight> knights =
 	{
-		{"Minseok", 1},
+		{"Bong", 1},
 		{"Faker", 2},
 		{"Son", 3},
 		{"BTS", 4},
 	};
+
+	//sort(li.begin(), li.end());
+	//std::ranges::sort(li);
 
 	// 프로젝션(projection)
 	std::ranges::sort(knights, {}, &Knight::name);
@@ -71,7 +75,7 @@ int main()
 
 	map<string, int> m =
 	{
-		{"Minseok", 1},
+		{"Bong", 1},
 		{"Faker", 2},
 		{"Son", 3},
 		{"BTS", 4},
@@ -104,8 +108,10 @@ int main()
 	}
 
 	// 커스텀 뷰 (std::ranges::view_interface)
-	std::vector<int> myVec{ 1, 2, 3, 4, 5 };
+	std::vector<int> myVec{ 5, 2, 3, 4, 1 };
 	auto myView = ContainerView(myVec);
+
+	ranges::sort(myView);
 
 	for (auto n : myView)
 	{
